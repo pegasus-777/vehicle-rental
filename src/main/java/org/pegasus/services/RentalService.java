@@ -4,7 +4,8 @@ import org.pegasus.dbaccessor.DbAccessor;
 import org.pegasus.models.Vehicle;
 import org.pegasus.models.VehicleType;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.List;
 
 public class RentalService {
 
@@ -21,13 +22,13 @@ public class RentalService {
         dbAccessor.addVehicle(vehicleId, vehicleType, branchName, inventory);
     }
 
-    public Vehicle bookVehicle(VehicleType vehicleType, Date startTime, Date endTime){
+    public Vehicle bookVehicle(VehicleType vehicleType, LocalDate startTime, LocalDate endTime){
         Vehicle vehicle = dbAccessor.bookVehicle(vehicleType, startTime, endTime);
         System.out.println(vehicle);
         return vehicle;
     }
 
-    public void viewInventory(Date startTime, Date endTime){
-
+    public List<Vehicle> viewInventory(LocalDate startTime, LocalDate endTime){
+        return dbAccessor.getAllBookingHistoriesInTheRange(startTime, endTime);
     }
 }

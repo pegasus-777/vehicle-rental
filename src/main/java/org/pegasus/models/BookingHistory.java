@@ -1,9 +1,18 @@
 package org.pegasus.models;
 
-import java.util.Date;
+import lombok.Getter;
 
+import java.time.LocalDate;
+
+@Getter
 public class BookingHistory {
     private Vehicle vehicle;
-    private Date startDate;
-    private Date endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    public BookingHistory(Vehicle vehicle, LocalDate startDate, LocalDate endDate) {
+        this.vehicle = vehicle;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

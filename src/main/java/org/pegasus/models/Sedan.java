@@ -7,4 +7,6 @@ public class Sedan extends Vehicle{
         this.setCost(150);
         this.setType(VehicleType.SEDAN);
     }
+
+
 }

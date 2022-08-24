@@ -7,7 +7,8 @@ import org.pegasus.exceptions.BranchNotFound;
 import org.pegasus.models.*;
 import org.pegasus.utils.Compare;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -58,7 +59,7 @@ public class DbAccessor {
         }
     }
 
-    public Vehicle bookVehicle(VehicleType vehicleType, Date startTime, Date endTime) {
+    public Vehicle bookVehicle(VehicleType vehicleType, LocalDate startTime, LocalDate endTime) {
         List<Branch> branchesList = db.getBranchesList();
         PriorityQueue<Vehicle> pq = new PriorityQueue<>(new Compare());
         for(Branch branch : branchesList){
@@ -74,6 +75,27 @@ public class DbAccessor {
         Vehicle vehicle = pq.peek();
         vehicle.setVehicleStatus(VehicleStatus.BOOKED);
         vehicle.setInventory(vehicle.getInventory() - 1);
+
+        db.addBookingHistory(vehicle, startTime, endTime);
         return pq.peek();
     }
+
+    public List<Vehicle> getAllBookingHistoriesInTheRange(LocalDate startDate, LocalDate endDate){
+        List<Vehicle> vehicleList = new ArrayList<>();
+        for(Branch branch : db.getBranchesList()){
+            vehicleList.addAll(branch.getVehiclesList().stream().filter(Vehicle::isAvailable).toList());
+        }
+
+        for(BookingHistory bookingHistory : db.getBookingHistories(startDate, endDate)){
+            vehicleList.add(bookingHistory.getVehicle());
+        }
+
+        System.out.println("Vehicles list : ");
+        for(Vehicle vehicle: vehicleList){
+            System.out.println(vehicle);
+        }
+        return vehicleList;
+
+    }
+
 }
